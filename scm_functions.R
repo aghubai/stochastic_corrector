@@ -2784,6 +2784,17 @@ sim_fusion <- function (g, N, tau, v, mu, o, eps=1, npar=0, apar=1.1, adiff=NULL
   return(list(c(sf, efit, eq), hst, survs))
 }
 
+checkdiff <- function (vs, a, mu, test) {
+  vp <- vs[1]
+  ve <- vs[-1]
+  ap <- a[1]
+  ae <- a[2]
+  ve_n <- ve * exp(ae * (1 - mu) * test)
+  co <- sum(ve)*ae*mu / (ae*(1-mu) - ap)
+  vp_n <- (vp - co) * exp(ap * test) + co * exp(ae * (1-mu) * test)
+  return(c(vp_n, ve_n))
+}
+
 growD <- function (vs, vmax, tau, a, mu, tp, err=1e-5) {
   
   tout <<- tau
