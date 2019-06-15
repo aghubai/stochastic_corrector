@@ -1989,14 +1989,14 @@ calcthr <- function (filename, epsylon=0.05, x, thralongx=TRUE, logscale=TRUE, r
 }
 
 # plot thresholds, possibly bounded by each other
-thrplot <- function (filenames, varname, varvalues, epsylons=NULL, boundid,
+thrplot <- function (filenames, varname, varvalues, epsylons, boundid,
                      boundhi=TRUE, areadown=TRUE, verbose=FALSE, plot=TRUE,
                      mirror=TRUE, linejoin=TRUE, joinright=TRUE, pos=NULL, ...) {
   # 'mirror', linejoin', 'joinright' and 'pos' are aesthetic features
   
   n <- length(filenames)
   
-  if (is.null(epsylons)) epsylons <- rep(0, n)
+  if (missing(epsylons)) epsylons <- 0.05
   if (length(epsylons) == 1) epsylons <- rep(epsylons, n)
   if (missing(boundid)) boundid <- rep(NA, n)
   if (length(boundhi) == 1) boundhi <- rep(boundhi, n)
@@ -2112,6 +2112,8 @@ maxgenesplot <- function (files, varname, varvalues, epsylons, below=TRUE,
                           verbose=FALSE, plot=TRUE, plotplace=FALSE, ...) {
   
   x <- as.numeric(varvalues)
+  if (missing(epsylons)) epsylons <- 0.05
+  if (length(epsylons) == 1) epsylons <- rep(epsylons, length(x))
   thr <- thrplot(files[x > 0], varname, varvalues[x > 0], epsylons[x > 0],
                  verbose=TRUE, plot=plotplace, ...)
   
@@ -2428,6 +2430,23 @@ cmplot_vmax <- function (range1, range2, nodes, squares, int=0, tlog=3, border=F
   points(snodes[, 2], snodes[, 3], col=cols, pch=16)  # separate nodes
   points(unodes[, 2], unodes[, 3])                    # uncertain nodes
   points(rnodes[, 2], rnodes[, 3], pch=".", cex=3)    # rest
+}
+
+maxgenes <- function () {
+  if (all(!is.na(suppressWarnings(as.numeric(varvalues))))
+      && all(as.numeric(varvalues) > 0))
+    maxgenesplot(files, varname, varvalues) else {
+      maxgenesplot(files, varname, exp(seq_len(length(files))))
+      legend("topleft", , varvalues, bty="n", inset=0.05)}
+}
+
+draweach <- function (l = seq_along(files)) {
+  for (i in l) {
+    load(files[i])
+    cmplot(range1, range2, nodes, squares, mirror=TRUE,
+           xlab="copies", ylab="genes", main=paste(varname, varvalues[i], sep=": "))
+    thr <- calcthr(files[i], draw=TRUE, add=TRUE, mirror=TRUE)
+    legend("topright", , paste("df =", thr$spline.df), bty="n", inset=0.05)}
 }
 
 # ---
