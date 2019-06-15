@@ -13,7 +13,7 @@ Installation guide
 Demo
 - The script file ("scm_script.R") contains all necessary instructions for reproducing the data. The plotting file ("scm_plotting.R") shows how to recreate figures using demo data.
 - The expected output is both a file and a plot.
-- Run time varies greatly depending on the parameters. Typical run time between minutes to days. Runs with m=0 are especially long.
+- Run time varies greatly depending on the parameters. Typical run time: minutes to days. Runs with m=0 are especially long.
 
 Instruction for use
 - The script file contains code for reproducing the data of the manuscipt.
